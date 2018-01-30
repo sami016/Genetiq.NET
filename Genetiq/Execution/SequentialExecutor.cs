@@ -14,7 +14,7 @@ using Genetiq.Core.Termination;
 namespace Genetiq.Execution
 {
     public class SequentialExecutor<T>
-        where T : IGenotype
+        where T : ICloneable
     {
 
         public void Run(AlgorithmProfile<T> profile)
@@ -23,11 +23,7 @@ namespace Genetiq.Execution
             // Initial seed and fitness evaluation.
             foreach (var population in profile.PopulationEnvironment.Populations)
             {
-                population.Seed(
-                    Enumerable
-                    .Range(0, population.Count)
-                    .Select(x => profile.SeedFactory())
-                );
+                population.Seed(profile.SeedFactory);
                 // Pre-fitness evaluation hook.
                 profile.PreFitnessEvaluation?.Invoke(population);
                 // Evaluate the fitness of every individual in the population.

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using Genetiq.Core.Genotype;
 
@@ -16,7 +17,7 @@ namespace Genetiq.Representations.Sequences
     /// Basic string representation.
     /// Data is encoded as a byte array.
     /// </summary>
-    public class Sequence<T>: IGenotype
+    public class Sequence<T>: ICloneable
     {
         public T[] Data { get; }
 
@@ -27,7 +28,7 @@ namespace Genetiq.Representations.Sequences
             Data = data;
         }
 
-        public IGenotype Clone()
+        object ICloneable.Clone()
         {
             return new Sequence<T>(Data.Clone() as T[]);
         }

@@ -15,7 +15,7 @@ namespace Genetiq.Core.RoundStrategy
     {
 
         public void Run<T>(IPopulation<T> population, ISelectionStrategy selection, IMutator<T> mutator, ICombiner<T> combiner)
-            where T : IGenotype
+            where T : ICloneable
         {
             var newGeneration = new T[population.Count];
             for (var i=0; i<population.Count; i++)

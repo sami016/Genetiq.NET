@@ -12,6 +12,6 @@ namespace Genetiq.Selection
     /// </summary>
     interface ISelectionScheme<T>
     {
-        IGenotype Select(IPopulation<T> population);
+        T Select(IPopulation<T> population);
     }
 }
