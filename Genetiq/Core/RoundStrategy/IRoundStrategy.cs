@@ -1,5 +1,4 @@
 ﻿using System;
-using Genetiq.Core.Genotype;
 using Genetiq.Core.Mutation;
 using Genetiq.Core.Populations;
 using Genetiq.Core.Selection;

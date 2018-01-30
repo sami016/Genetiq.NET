@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Genetiq.Core.Genotype;
 using Genetiq.Core.Mutation;
 using Genetiq.Core.Populations;
 using Genetiq.Core.Selection;

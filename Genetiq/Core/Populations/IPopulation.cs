@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Genetiq.Core.Fitness;
-using Genetiq.Core.Genotype;
 
 namespace Genetiq.Core.Populations
 {

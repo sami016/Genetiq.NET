@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Genetiq.Core.Fitness;
-using Genetiq.Core.Genotype;
 
 namespace Genetiq.Core.Populations
 {

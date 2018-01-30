@@ -1,5 +1,4 @@
-﻿using Genetiq.Core.Genotype;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 

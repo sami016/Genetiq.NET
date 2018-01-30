@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using Genetiq.Core;
 using Genetiq.Core.Fitness;
-using Genetiq.Core.Genotype;
 using Genetiq.Core.PopulationEnvironments;
 using Genetiq.Core.Populations;
 using Genetiq.Core.RoundStrategy;
