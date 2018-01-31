@@ -9,7 +9,7 @@ namespace Genetiq.Core.Populations
     public class Population<T> : IPopulation<T>
     {
         private readonly T[] _genotypes;
-        private readonly IDictionary<T, double> _fitnesses;
+        private IDictionary<T, double> _fitnesses;
 
         public Population(int populationSize)
         {
@@ -39,6 +39,22 @@ namespace Genetiq.Core.Populations
             for (int i = 0; i < Count; i++)
             {
                 _fitnesses[_genotypes[i]] = fitnessFunction.EvaluateFitness(_genotypes[i]);
+            }
+        }
+
+        public void ExternalEvaluate(IDictionary<T, double> fitnesses, bool copyValues = false)
+        {
+            if (copyValues)
+            {
+                _fitnesses.Clear();
+                foreach (var entry in fitnesses)
+                {
+                    _fitnesses.Add(entry.Key, entry.Value);
+                }
+            }
+            else
+            {
+                _fitnesses = fitnesses;
             }
         }
 

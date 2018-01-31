@@ -61,7 +61,8 @@ namespace Genetiq.Tests.Integration
                 SeedFactory = seedFunc
             };
 
-            new SequentialExecutor<Sequence<byte>>().Run(algorithmProfile);
+            //new SequentialExecutor<Sequence<byte>>().Run(algorithmProfile);
+            new ParallelExecutor<Sequence<byte>>().Run(algorithmProfile);
 
             var pop = algorithmProfile.PopulationEnvironment.Populations.First();
             Debug.WriteLine($"Completed... pop has {pop.Count} individuals");

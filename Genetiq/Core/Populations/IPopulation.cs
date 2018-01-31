@@ -38,5 +38,12 @@ namespace Genetiq.Core.Populations
         /// </summary>
         void Evaluate(IFitnessFunction<T> fitnessFunction);
 
+
+        /// <summary>
+        /// Used to perform external evaluation of fitnesses. e.g. when using parallel.
+        /// </summary>
+        /// <param name="fitnesses">fitness mapping</param>
+        /// <param name="copyValues">whether to copy the values into a new dictionary</param>
+        void ExternalEvaluate(IDictionary<T, double> fitnesses, bool copyValues = false);
     }
 }
