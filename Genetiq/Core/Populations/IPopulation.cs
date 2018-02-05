@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Genetiq.Core.Fitness;
 
 namespace Genetiq.Core.Populations
@@ -37,7 +38,6 @@ namespace Genetiq.Core.Populations
         /// Evaluates the fitness of all individuals within the population.
         /// </summary>
         void Evaluate(IFitnessFunction<T> fitnessFunction);
-
 
         /// <summary>
         /// Used to perform external evaluation of fitnesses. e.g. when using parallel.

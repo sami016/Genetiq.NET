@@ -1,34 +1,71 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Genetiq.Core;
+using Genetiq.Core.Fitness;
 using Genetiq.Core.PopulationEnvironments;
 using Genetiq.Core.Populations;
+using Genetiq.Core.RoundStrategy;
 using Genetiq.Core.Termination;
+using Genetiq.Utility;
 
 namespace Genetiq.Execution
 {
     /// <summary>
-    /// Standard parallel executor.
-    /// The round for each population is synchronized, such that no population is ever ahead.
+    /// Parallel implementation of an executor.
+    /// 
+    /// Not currently worth using as it seems to add overhead without improvement.
+    /// 
+    /// Future parallel implementations should focus more on distributed populations and migration.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ParallelExecutor<T> : IGeneticExecutor<T>
+    public class ParallelExecutor<T>
         where T : ICloneable
     {
-        public void ConfigureThreadPool(int coreScaleFacor = 2)
+        private struct FitnessComputationTask
         {
-            // Get the number of logical processors.
-            var processorCount = Environment.ProcessorCount;
-            ThreadPool.SetMinThreads(processorCount, processorCount);
+            public ArraySegment<T> Genotypes { get; set; }
+            public ArraySegment<double> Fitnesses { get; set; }
+        }
+
+        public int NumThreads { get; set; } = Environment.ProcessorCount;
+
+        private void StartThreads(CancellationToken cancellationToken, IFitnessFunction<T> fitnessFunction, BlockingCollection<FitnessComputationTask> fitnessComputationTasks)
+        {
+            for (var i = 0; i < NumThreads; i++)
+            {
+                new Thread(() => Process(cancellationToken, fitnessFunction, fitnessComputationTasks)).Start();
+            }
+        }
+
+        private void Process(CancellationToken cancellationToken, IFitnessFunction<T> fitnessFunction, BlockingCollection<FitnessComputationTask> fitnessComputationTasks)
+        {
+            try
+            {
+                foreach (var item in fitnessComputationTasks.GetConsumingEnumerable(cancellationToken))
+                {
+                    for (var index = item.Fitnesses.Offset; index < item.Fitnesses.Count; index++)
+                    {
+                        item.Fitnesses.Array[index] = fitnessFunction.EvaluateFitness(item.Genotypes.Array[index]);
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         public void Run(AlgorithmProfile<T> profile)
         {
+            var cancellationSource = new CancellationTokenSource();
+            var fitnessProcessingQueue = new BlockingCollection<FitnessComputationTask>();
+
+            StartThreads(cancellationSource.Token, profile.FitnessFunction, fitnessProcessingQueue);
+
             var roundNumber = 0;
             // Initial seed and fitness evaluation.
             foreach (var population in profile.PopulationEnvironment.Populations)
@@ -45,58 +82,45 @@ namespace Genetiq.Execution
             while (!profile.TerminationCondition.ShouldTerminate(CreateTerminationContext(roundNumber, profile.PopulationEnvironment)))
             {
                 // For each population.
-                var populationTasks = profile.PopulationEnvironment.Populations
-                    .Select(population => new Task(PopulationRound, new Tuple<AlgorithmProfile<T>, IPopulation<T>>(profile, population)))
-                    .ToArray();
-                foreach (var task in populationTasks)
+                foreach (var population in profile.PopulationEnvironment.Populations)
                 {
-                    task.Start();
-                }
-                // Wait for all populations to finish the round.
-                Task.WaitAll(populationTasks);
+                    // Run the round strategy.
+                    profile.RoundStrategy.Run(
+                        population,
+                        profile.SelectionStrategy,
+                        profile.Mutator,
+                        profile.Combiner
+                    );
+                    // Pre-fitness evaluation hook.
+                    profile.PreFitnessEvaluation?.Invoke(population);
+                    // Evaluate the fitness of every individual in the population.
+                    population.Evaluate(profile.FitnessFunction);
 
+                    // Create result arrays.
+                    T[] genotypes = population.Genotypes.Clone() as T[];
+                    double[] fitnesses = new double[genotypes.Length];
+                    var genotypePartitions = genotypes.Partition(NumThreads);
+                    var fitnessPartitions = fitnesses.Partition(NumThreads);
+                    for (var i = 0; i < NumThreads; i++)
+                    {
+                        fitnessProcessingQueue.Add(new FitnessComputationTask
+                        {
+                            Genotypes = genotypePartitions[i],
+                            Fitnesses = fitnessPartitions[i]
+                        });
+                    }
+
+                    // Wait for processing to finish.
+                    while (fitnessProcessingQueue.Any()) ;
+
+                    // Post-fitness evaluation hook.
+                    profile.PostFitnessEvaluation?.Invoke(population);
+
+                }
                 roundNumber++;
             }
-        }
 
-        private void PopulationRound(object obj)
-        {
-            var state = obj as Tuple<AlgorithmProfile<T>, IPopulation<T>>;
-            if (state == null)
-            {
-                return;
-            }
-
-            var profile = state.Item1;
-            var population = state.Item2;
-
-            // Run the round strategy.
-            profile.RoundStrategy.Run(
-                population,
-                profile.SelectionStrategy,
-                profile.Mutator,
-                profile.Combiner
-            );
-            // Pre-fitness evaluation hook.
-            profile.PreFitnessEvaluation?.Invoke(population);
-            // Evaluate the fitness of every individual in the population.
-            population.Evaluate(profile.FitnessFunction);
-
-            // Create a dictionary to hold new fitness values.
-            var evaluted = new ConcurrentDictionary<T, double>();
-            var evaluateTasks = population.Genotypes.Select(x => new Task(() =>
-            {
-                while (!evaluted.TryAdd(x, profile.FitnessFunction.EvaluateFitness(x))) ;
-            })).ToArray();
-            foreach (var task in evaluateTasks)
-            {
-                task.Start();
-            }
-            Task.WaitAll(evaluateTasks);
-            population.ExternalEvaluate(evaluted, false);
-
-            // Post-fitness evaluation hook.
-            profile.PostFitnessEvaluation?.Invoke(population);
+            cancellationSource.Cancel();
         }
 
         private TerminationConditionContext<T> CreateTerminationContext(int roundNumber, IPopulationEnvironment<T> populationEnvironment)

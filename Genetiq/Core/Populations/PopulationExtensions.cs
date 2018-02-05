@@ -15,5 +15,6 @@ namespace Genetiq.Core.Populations
             }
             population.Seed(genoTypes);
         }
+
     }
 }

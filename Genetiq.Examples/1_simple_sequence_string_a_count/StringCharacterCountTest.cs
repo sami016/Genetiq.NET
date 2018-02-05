@@ -36,24 +36,18 @@ namespace Genetiq.Tests.Integration
                 return new Sequence<byte>(data);
             };
 
-            Debug.WriteLine($"Trying to get string of 'a's");
-
-            var a = Sequence.OfCharacterBytes("ababababab");
-            var f = new AFitnessFunction().EvaluateFitness(a);
-            Debug.WriteLine($"{a} {f}");
-
             var mutator = new SequenceReplaceMutation<byte>(random, SequenceReplaceMutation.RandomReplacementByte(random, 0, (byte)255));
             mutator.SetNumberOfMutations(1);
 
             var algorithmProfile = new AlgorithmProfile<Sequence<byte>>
             {
-                // Single Population of 100.
-                PopulationEnvironment = new SimplePopulationEnvironment<Sequence<byte>>(new Population<Sequence<byte>>(100)),
+                // Single Population of 1000.
+                PopulationEnvironment = new SimplePopulationEnvironment<Sequence<byte>>(new Population<Sequence<byte>>(1000)),
 
                 SelectionStrategy = new FitnessProportionateSelection(random),
                 FitnessFunction = new AFitnessFunction(),
                 RoundStrategy = new GenerationalRoundStrategy(),
-                TerminationCondition = new RoundThresholdTerminationCondition<Sequence<byte>>(5000),
+                TerminationCondition = new RoundThresholdTerminationCondition<Sequence<byte>>(500),
                 
                 Mutator = mutator,
                 Combiner = new SequenceUniformCrossover<byte>(random),
@@ -62,7 +56,16 @@ namespace Genetiq.Tests.Integration
             };
 
             //new SequentialExecutor<Sequence<byte>>().Run(algorithmProfile);
-            new ParallelExecutor<Sequence<byte>>().Run(algorithmProfile);
+            //ParallelExecutor
+            var executor = new SequentialExecutor<Sequence<byte>>();
+            //executor.NumThreads = 100;
+            var stopWatch = new Stopwatch();
+
+            stopWatch.Start();
+            executor.Run(algorithmProfile);
+            stopWatch.Stop();
+
+            Debug.WriteLine($"Execution time: {stopWatch.ElapsedMilliseconds} ms");
 
             var pop = algorithmProfile.PopulationEnvironment.Populations.First();
             Debug.WriteLine($"Completed... pop has {pop.Count} individuals");

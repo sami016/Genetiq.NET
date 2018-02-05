@@ -18,10 +18,7 @@ namespace Genetiq.Representations.Sequences
 
         public static Func<byte, byte> RandomReplacementByte(Random random, byte min, byte max)
         {
-            return old =>
-            {
-                return (byte)random.Next(min, max);
-            };
+            return old => (byte)random.Next(min, max);
         }
     }
 
