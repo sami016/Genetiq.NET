@@ -9,6 +9,21 @@ using Genetiq.Core.Populations;
 
 namespace Genetiq.Core
 {
+
+    /// <summary>
+    /// Delegate for a pre-fitness evaluation hook.
+    /// </summary>
+    /// <typeparam name="T">individual type</typeparam>
+    /// <param name="population">population</param>
+    public delegate void PreFitnessEvaluationHook<T>(IPopulation<T> population);
+
+    /// <summary>
+    /// Delegate for a post-fitness evaluation hook.
+    /// </summary>
+    /// <typeparam name="T">individual type</typeparam>
+    /// <param name="population">population</param>
+    public delegate void PostFitnessEvaluationHook<T>(IPopulation<T> population);
+
     /// <summary>
     /// A collection of hooks for modifying the way in which the genetic algorithm is run.
     /// </summary>
@@ -58,13 +73,13 @@ namespace Genetiq.Core
         /// Hook for making modifications to individuals prior to a fitness evaluation update.
         /// Generally useful modification for hybrid algorithms (e.g. memetic algorithm).
         /// </summary>
-        public Action<IPopulation<T>> PreFitnessEvaluation;
+        public PreFitnessEvaluationHook<T> PreFitnessEvaluation;
 
         /// <summary>
         /// Hook for making modifications to fitness values after the fitness evaluation has completed for a population.
         /// This is typically when any fitness rescaling operations would be applied - e.g. normalisation.
         /// </summary>
-        public Action<IPopulation<T>> PostFitnessEvaluation;
+        public PostFitnessEvaluationHook<T> PostFitnessEvaluation;
 
     }
 }

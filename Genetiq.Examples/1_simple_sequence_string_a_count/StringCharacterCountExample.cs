@@ -39,6 +39,11 @@ namespace Genetiq.Tests.Integration
             var mutator = new SequenceReplaceMutation<byte>(random, SequenceReplaceMutation.RandomReplacementByte(random, 0, (byte)255));
             mutator.SetNumberOfMutations(1);
 
+            // Employ a generational round strategy which replaces the entire population each round with new children.
+            var roundStrategy = new GenerationalRoundStrategy();
+            // Keep the most elite 5% of the population alive at all times.
+            roundStrategy.ShortlistStrategies.Add(new ElitismShortlistStrategy(0.05));
+
             var algorithmProfile = new AlgorithmProfile<Sequence<byte>>
             {
                 // Single Population of 1000.
@@ -46,7 +51,7 @@ namespace Genetiq.Tests.Integration
 
                 SelectionStrategy = new FitnessProportionateSelection(random),
                 FitnessFunction = new AFitnessFunction(),
-                RoundStrategy = new GenerationalRoundStrategy(),
+                RoundStrategy = roundStrategy,
                 TerminationCondition = new RoundThresholdTerminationCondition<Sequence<byte>>(500),
                 
                 Mutator = mutator,
