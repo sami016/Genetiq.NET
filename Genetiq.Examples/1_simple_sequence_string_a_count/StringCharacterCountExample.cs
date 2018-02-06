@@ -14,12 +14,12 @@ using Genetiq.Representations.Sequences;
 
 namespace Genetiq.Tests.Integration
 {
-    public class StringCharacterCountTest
+    public class StringCharacterCountExample
     {
 
         static void Main(string[] args)
         {
-            new StringCharacterCountTest().Run();
+            new StringCharacterCountExample().Run();
         }
 
         public void Run()

@@ -32,6 +32,11 @@ namespace Genetiq.Representations.Sequences
             return new Sequence<T>(Data.Clone() as T[]);
         }
 
+        public static Sequence<T> From(params T[] args)
+        {
+            return new Sequence<T>(args);
+        }
+
         public override string ToString()
         {
             // If encoded as bytes, stringify by decoding using UTF8.
@@ -40,7 +45,22 @@ namespace Genetiq.Representations.Sequences
                 var seq = this as Sequence<byte>;
                 return seq.GetEncodedString();
             }
-            return base.ToString();
+            var sb = new StringBuilder();
+            var first = true;
+            sb.Append("[");
+            foreach (var item in Data)
+            {
+                if (first)
+                {
+                    first = false;
+                }else
+                {
+                    sb.Append(", ");
+                }
+                sb.Append(item.ToString());
+            }
+            sb.Append(" ]");
+            return sb.ToString();
         }
     }
 }
