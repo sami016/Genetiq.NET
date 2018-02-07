@@ -2,6 +2,10 @@
 
 # Examples
 
+[Example 1: Evolving a simple sequence of 'A's](https://github.com/sami016/Genetiq.NET/tree/master/Genetiq.Examples/1_simple_sequence_string_a_count)
+[Example 2: Evolving a linear classifier](https://github.com/sami016/Genetiq.NET/tree/master/Genetiq.Examples/2_linear_classification_task)
+
+
 # Future
 
  - Parallelism (multi-deme populations and migration)
