@@ -45,11 +45,6 @@ namespace Genetiq.Core
         public IFitnessFunction<T> FitnessFunction { get; set; }
 
         /// <summary>
-        /// The termination condition - defining when to stop running.
-        /// </summary>
-        public ITerminationCondition<T> TerminationCondition { get; set; }
-
-        /// <summary>
         /// Defines the strategy for selecting individuals from a population.
         /// </summary>
         public ISelectionStrategy SelectionStrategy { get; set; }

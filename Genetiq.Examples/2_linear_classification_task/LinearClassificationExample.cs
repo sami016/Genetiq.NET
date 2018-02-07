@@ -20,6 +20,7 @@ namespace Genetiq.Examples._2_linear_classification_task
         {
             var random = new Random();
 
+            // Configuration:
             Func<Sequence<double>> seedFunc = () =>
             {
                 var data = new double[3];
@@ -29,37 +30,27 @@ namespace Genetiq.Examples._2_linear_classification_task
                 }
                 return new Sequence<double>(data);
             };
-
             var mutator = new SequenceReplaceMutation<double>(random, d => d + random.NextDouble() * 0.05);
             mutator.SetNumberOfMutations(1);
-
             var algorithmProfile = new AlgorithmProfile<Sequence<double>>
             {
-                // Single Population of 1000.
                 PopulationEnvironment = new SimplePopulationEnvironment<Sequence<double>>(new Population<Sequence<double>>(1000)),
-
                 SelectionStrategy = new TournamentSelection(random, 10),
                 FitnessFunction = new ClassifierFitnessFunction(random, TestDataSet.TrainingData, false, true),
                 RoundStrategy = new GenerationalRoundStrategy(),
-                TerminationCondition = new RoundThresholdTerminationCondition<Sequence<double>>(500),
-
                 Mutator = mutator,
                 Combiner = new SequenceUniformCrossover<double>(random),
-
                 SeedFactory = seedFunc
             };
 
+            // Execute the EA.
             var executor = new SequentialExecutor<Sequence<double>>();
-            //executor.NumThreads = 100;
-            var stopWatch = new Stopwatch();
+            executor.Run(algorithmProfile, new RoundThresholdTerminationCondition<Sequence<double>>(500));
 
-            stopWatch.Start();
-            executor.Run(algorithmProfile);
-            stopWatch.Stop();
-
-            Debug.WriteLine($"Execution time: {stopWatch.ElapsedMilliseconds} ms");
+            // Create a function for evaluating against test set partition.
             var testFitness = new ClassifierFitnessFunction(random, TestDataSet.TestingData, false, false);
 
+            // Output the top 5 individuals.
             var pop = algorithmProfile.PopulationEnvironment.Populations.First();
             Debug.WriteLine($"Completed... pop has {pop.Count} individuals");
             Debug.WriteLine("Top 5 individuals:");

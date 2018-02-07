@@ -5,6 +5,7 @@ using System.Text;
 using Genetiq.Benchmark.Sequences;
 using Genetiq.Core;
 using Genetiq.Core.Fitness;
+using Genetiq.Core.Termination;
 using Genetiq.Execution;
 using Genetiq.Representations.Sequences;
 
@@ -38,7 +39,7 @@ namespace Genetiq.Benchmark
                 var profile = _algorithmProfileFactory();
                 profile.FitnessFunction = benchmark.Value;
 
-                executor.Run(profile);
+                executor.Run(profile, new RoundThresholdTerminationCondition<Sequence<double>>(100));
                 results.Scores[benchmark.Key] = profile.PopulationEnvironment.Populations.SelectMany(x => x.Fitnesses.Values).Max();
             }
 

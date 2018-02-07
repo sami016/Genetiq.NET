@@ -16,7 +16,7 @@ namespace Genetiq.Execution
         where T : ICloneable
     {
 
-        public void Run(AlgorithmProfile<T> profile)
+        public void Run(AlgorithmProfile<T> profile, ITerminationCondition<T> terminationCondition)
         {
             var roundNumber = 0;
             // Initial seed and fitness evaluation.
@@ -31,7 +31,7 @@ namespace Genetiq.Execution
                 profile.PostFitnessEvaluation?.Invoke(population);
             }
             // For each round.
-            while (!profile.TerminationCondition.ShouldTerminate(CreateTerminationContext(roundNumber, profile.PopulationEnvironment)))
+            while (!terminationCondition.ShouldTerminate(CreateTerminationContext(roundNumber, profile.PopulationEnvironment)))
             {
                 // For each population.
                 foreach (var population in profile.PopulationEnvironment.Populations)
