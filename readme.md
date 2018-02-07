@@ -30,4 +30,4 @@
  The algorithm profile class if used as a configuration container to be set up before execution.
  An algorithm profile will maintain state between subsequent runs - a factory should be used to create fresh profiles if this is undesirable.
 
-[See Example 1](./tree/master/Genetiq.Examples/1_simple_sequence_string_a_count)
+[See Example 1](https://github.com/sami016/Genetiq.NET/tree/master/Genetiq.Examples/1_simple_sequence_string_a_count)
