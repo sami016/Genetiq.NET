@@ -7,7 +7,6 @@ As an easy example, the set of coordinates for all cities in the UK and France h
 Individuals are represented by a sequence of doubles, these values define a hyperplane which can be used for classification between two classes.
 The third term in the sequence is used as a bias term (proportional with `-c` in the equation `y = mx+c`).
 ```
-// 
 v(x, y) = s[0] * x +  s[1] * y + s[2] * 1;
 ```
 
