@@ -1,10 +1,15 @@
 # Project
 
+ - Evolutionary Algorithm: A class of algorithm inspired by the evolutionary process seen in nature.
+	- Optimization algorithm involving a population of reproducing individuals, each of which is assigned a measure of fitness based on a utility function (analogous with Darwinian fitness).
+	- Individuals with higher fitness values reproduce with a greater probability than those with lower fitness values, hence the relative frequency of fitter individuals increases over time.
+	- Variation is introduced over time via mutation and recombination, this variation gives differences that can be acted on by the selective pressure. Despite this gradual variation, children are always similar to their parents.
+ - Genetic Algorithm: A subclass of evolutionary algorithms in which an individual's genome is represented by a sequence/string of numbers.
+
 # Examples
 
  - [Example 1: Evolving a simple sequence of 'A's](https://github.com/sami016/Genetiq.NET/tree/master/Genetiq.Examples/1_simple_sequence_string_a_count)
  - [Example 2: Evolving a linear classifier](https://github.com/sami016/Genetiq.NET/tree/master/Genetiq.Examples/2_linear_classification_task)
-
 
 # Future
 
