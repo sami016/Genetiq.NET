@@ -20,11 +20,12 @@ namespace Genetiq.Representations.Sequences
     {
         public T[] Data { get; }
 
-        public int Length => Data.Length;
+        public int Length { get; }
 
         public Sequence(T[] data)
         {
             Data = data;
+            Length = Data.Length;
         }
 
         object ICloneable.Clone()

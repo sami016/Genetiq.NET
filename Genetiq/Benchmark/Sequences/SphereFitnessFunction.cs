@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Genetiq.Core.Fitness;
+using Genetiq.Core.Selection.Fitness.Explicit;
 using Genetiq.Representations.Sequences;
 
 namespace Genetiq.Benchmark.Sequences
@@ -10,7 +10,7 @@ namespace Genetiq.Benchmark.Sequences
     /// Sphere fitness function - based on De Jong's test function F1.
     /// Limits: -5.12 <= x[i] <= 5.12
     /// </summary>
-    public class SphereFitnessFunction : IFitnessFunction<Sequence<double>>
+    public class SphereFitnessFunction : IExplicitFitnessFunction<Sequence<double>>
     {
         public double EvaluateFitness(Sequence<double> individual)
         {

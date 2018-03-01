@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using Genetiq.Core.Fitness;
-using Genetiq.Core.Populations;
-using Genetiq.Core.RoundStrategy;
+using Genetiq.Core.Selection.Fitness;
+using Genetiq.Core.Environment.Populations;
+using Genetiq.Core.Epoch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Genetiq.Test.Core.RoundStrategy
             {
                 pop.Genotypes[i] = i;
             }
-            pop.Evaluate(new DelegateFitnessFunction<double>(i => i));
+            //pop.Evaluate(new DelegateFitnessFunction<double>(i => i));
 
             var result = elitism.GetShortlisted(pop);
             result.Should().Contain(20.0);

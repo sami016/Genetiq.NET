@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Genetiq.Core;
-using Genetiq.Core.Termination;
+using Genetiq.Core.Epoch.Termination;
 
 namespace Genetiq.Execution
 {
@@ -16,7 +16,7 @@ namespace Genetiq.Execution
         /// <param name="geneticExecutor">genetic executor</param>
         /// <param name="algorithmProfileFactory">algorithm profile factory</param>
         /// <returns>algorithm profile</returns>
-        public static AlgorithmProfile<T> Run<T>(this IGeneticExecutor<T> geneticExecutor, Func<AlgorithmProfile<T>> algorithmProfileFactory, ITerminationCondition<T> terminationCondition)
+        public static ExecutionProfile<T> Run<T>(this IGeneticExecutor<T> geneticExecutor, Func<ExecutionProfile<T>> algorithmProfileFactory, ITerminationCondition<T> terminationCondition)
             where T : ICloneable
         {
             var profile = algorithmProfileFactory();

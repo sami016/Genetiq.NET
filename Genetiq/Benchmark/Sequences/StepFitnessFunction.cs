@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Genetiq.Core.Fitness;
+using Genetiq.Core.Selection.Fitness.Explicit;
 using Genetiq.Representations.Sequences;
 
 namespace Genetiq.Benchmark.Sequences
@@ -9,7 +9,7 @@ namespace Genetiq.Benchmark.Sequences
     /// <summary>
     /// 
     /// </summary>
-    public class StepFitnessFunction : IFitnessFunction<Sequence<double>>
+    public class StepFitnessFunction : IExplicitFitnessFunction<Sequence<double>>
     {
         public double EvaluateFitness(Sequence<double> individual)
         {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <StartupObject>Genetiq.Tests.Integration.StringCharacterCountExample</StartupObject>
+    <StartupObject>Genetiq.Examples._1_simple_sequence_string_a_count.StringCharacterCountExample</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

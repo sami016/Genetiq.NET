@@ -1,14 +1,14 @@
-﻿using Genetiq.Core.Fitness;
-using Genetiq.Representations.Sequences;
-using Genetiq.Utility.DataSet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Genetiq.Core.Selection.Fitness.Explicit;
+using Genetiq.Representations.Sequences;
+using Genetiq.Utility.DataSet;
 
 namespace Genetiq.Examples._2_linear_classification_task
 {
-    public class ClassifierFitnessFunction : IFitnessFunction<Sequence<double>>
+    public class ClassifierFitnessFunction : IExplicitFitnessFunction<Sequence<double>>
     {
         private readonly LabelledDataSet<Sequence<double>, LocationClass> _data;
         private readonly LinearClassifier _classifier = new LinearClassifier();

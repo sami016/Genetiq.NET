@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Genetiq.Core;
-using Genetiq.Core.Populations;
+using Genetiq.Core.Environment.Populations;
 
 namespace Genetiq.Selection
 {

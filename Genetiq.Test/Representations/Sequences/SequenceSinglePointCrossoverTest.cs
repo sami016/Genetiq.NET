@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using FluentAssertions;
 using Genetiq.Representations.Sequences;
-using FluentAssertions;
+using System;
+using Xunit;
 
-namespace Genetiq.Tests.Representations.Sequences
+namespace Genetiq.Test.Representations.Sequences
 {
     public class SequenceSinglePointCrossoverTest
     {

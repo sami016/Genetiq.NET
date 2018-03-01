@@ -1,5 +1,5 @@
 ﻿using System;
-using Genetiq.Core.Mutation;
+using Genetiq.Core.Variation.Combination;
 
 namespace Genetiq.Representations.Sequences
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Genetiq.Core.Fitness;
+using Genetiq.Core.Selection.Fitness.Explicit;
 using Genetiq.Representations.Sequences;
 
 namespace Genetiq.Benchmark.Sequences
@@ -12,7 +12,7 @@ namespace Genetiq.Benchmark.Sequences
     /// Limits: -512 <= x[i] <= 511
     /// Global minimum: f(x) = 0; x[i] = 1.
     /// </summary>
-    public class GriewangkFitnessFunction : IFitnessFunction<Sequence<double>>
+    public class GriewangkFitnessFunction : IExplicitFitnessFunction<Sequence<double>>
     {
         public double EvaluateFitness(Sequence<double> individual)
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Genetiq.Core.Mutation;
+using Genetiq.Core.Variation.Combination;
 
 namespace Genetiq.Representations.Sequences
 {

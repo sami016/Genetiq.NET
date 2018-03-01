@@ -1,9 +1,11 @@
 ﻿using Genetiq.Core;
-using Genetiq.Core.PopulationEnvironments;
-using Genetiq.Core.Populations;
-using Genetiq.Core.RoundStrategy;
+using Genetiq.Core.Environment;
+using Genetiq.Core.Epoch;
+using Genetiq.Core.Environment.Populations;
 using Genetiq.Core.Selection;
-using Genetiq.Core.Termination;
+using Genetiq.Core.Selection.Strategies;
+using Genetiq.Core.Epoch.Termination;
+using Genetiq.Core.Variation;
 using Genetiq.Execution;
 using Genetiq.Representations.Sequences;
 using System;
@@ -30,34 +32,48 @@ namespace Genetiq.Examples._2_linear_classification_task
                 }
                 return new Sequence<double>(data);
             };
-            var mutator = new SequenceReplaceMutation<double>(random, d => d + random.NextDouble() * 0.05);
-            mutator.SetNumberOfMutations(1);
-            var algorithmProfile = new AlgorithmProfile<Sequence<double>>
+            var algorithmProfile = new ExecutionProfile<Sequence<double>>
             {
-                PopulationEnvironment = new SimplePopulationEnvironment<Sequence<double>>(new Population<Sequence<double>>(1000)),
-                SelectionStrategy = new TournamentSelection(random, 10),
-                FitnessFunction = new ClassifierFitnessFunction(random, TestDataSet.TrainingData, false, true),
-                RoundStrategy = new GenerationalRoundStrategy(),
-                Mutator = mutator,
-                Combiner = new SequenceUniformCrossover<double>(random),
-                SeedFactory = seedFunc
+                EnvironmentProfile = new EnvironmentProfile<Sequence<double>>
+                {
+                    Environment = new SimplePopulationEnvironment<Sequence<double>>(new Population<Sequence<double>>(1000)),
+                    GenomeSeeder = seedFunc
+                },
+                SelectionProfile = new ExplicitSelectionProfile<Sequence<double>>
+                {
+                    FitnessFunction = new ClassifierFitnessFunction(random, TestDataSet.TrainingData, false, true),
+                    SelectionStrategy = new TournamentSelection(random, 10)
+                },
+                EpochProfile = new EpochProfile<Sequence<double>>
+                {
+                    TerminationCondition = new RoundThresholdTerminationCondition<Sequence<double>>(500),
+                    EpochStrategy = new GenerationalEpochStrategy()
+                },
+                VariationProfile = new VariationProfile<Sequence<double>>()
+                {
+
+                    Mutator = new SequenceReplaceMutation<double>(random, d => d + random.NextDouble() * 0.05)
+                        .SetNumberOfMutations(1),
+                    Combiner = new SequenceUniformCrossover<double>(random),
+                }
             };
 
             // Execute the EA.
             var executor = new SequentialExecutor<Sequence<double>>();
-            executor.Run(algorithmProfile, new RoundThresholdTerminationCondition<Sequence<double>>(500));
+            executor.Run(algorithmProfile);
 
             // Create a function for evaluating against test set partition.
             var testFitness = new ClassifierFitnessFunction(random, TestDataSet.TestingData, false, false);
 
             // Output the top 5 individuals.
-            var pop = algorithmProfile.PopulationEnvironment.Populations.First();
+            var pop = algorithmProfile.EnvironmentProfile.Environment.Populations.First();
             Debug.WriteLine($"Completed... pop has {pop.Count} individuals");
             Debug.WriteLine("Top 5 individuals:");
-            foreach (var entry in pop.Fitnesses.OrderByDescending(x => x.Value).Take(5).ToList())
+            // OrderByDescending(x => x.Value)
+            foreach (var entry in pop.Genotypes.Take(5).ToList())
             {
                 // Plot the individual, it's fitness on the training set, then it's fitness on the testing set.
-                Debug.WriteLine($"{entry.Key}\n\tFitness (Training data): {entry.Value}\n\tPerformance (testing data): {testFitness.EvaluateFitness(entry.Key)*100}%\n\tFormula: {HumanReadableFunction(entry.Key)}");
+                //Debug.WriteLine($"{entry.Key}\n\tFitness (Training data): {entry.Value}\n\tPerformance (testing data): {testFitness.EvaluateFitness(entry.Key)*100}%\n\tFormula: {HumanReadableFunction(entry.Key)}");
             }
 
         }

@@ -6,6 +6,11 @@ namespace Genetiq.Benchmark
 {
     public class BenchmarkResults
     {
-        public IDictionary<string, double> Scores = new Dictionary<string, double>();
+        public IDictionary<string, double> Scores { get; }
+
+        public BenchmarkResults(IDictionary<string, double> scores)
+        {
+            Scores = scores;
+        }
     }
 }

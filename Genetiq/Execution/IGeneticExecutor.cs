@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Genetiq.Core;
-using Genetiq.Core.Termination;
+using Genetiq.Core.Epoch.Termination;
 
 namespace Genetiq.Execution
 {
@@ -22,7 +22,7 @@ namespace Genetiq.Execution
         /// </summary>
         /// <param name="algorithmProfile">algorithm profile</param>
         /// <param name="terminationCondition">termination condition which determines when to halt</param>
-        void Run(AlgorithmProfile<T> algorithmProfile, ITerminationCondition<T> terminationCondition);
+        void Run(ExecutionProfile<T> algorithmProfile, ITerminationCondition<T> terminationCondition);
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Genetiq.Core.Mutation;
+using Genetiq.Core.Variation.Mutation;
 
 namespace Genetiq.Representations.Sequences
 {
@@ -40,14 +40,16 @@ namespace Genetiq.Representations.Sequences
             _replaceFactory = replaceFactory;
         }
 
-        public void SetNumberOfMutations(int number)
+        public SequenceReplaceMutation<T> SetNumberOfMutations(int number)
         {
             _numberOfMutations = () => number;
+            return this;
         }
 
-        public void SetNumberOfMutationsFunc(Func<int> numberOfMutations)
+        public SequenceReplaceMutation<T> SetNumberOfMutationsFunc(Func<int> numberOfMutations)
         {
             _numberOfMutations = numberOfMutations;
+            return this;
         }
 
         public void Mutate(Sequence<T> sequence)

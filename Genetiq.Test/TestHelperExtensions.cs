@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Genetiq.Tests
+namespace Genetiq.Test
 {
     public static class TestHelperExtensions
     {
